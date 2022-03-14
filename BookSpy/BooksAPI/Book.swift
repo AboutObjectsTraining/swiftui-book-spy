@@ -54,11 +54,7 @@ public struct Book: Codable, Identifiable {
         authorName = try container.decode(String.self, forKey: .authorName)
         synopsis = try container.decodeIfPresent(String.self, forKey: .synopsis)
         let dateString = try container.decode(String.self, forKey: .releaseDate)
-        if #available(iOS 10.0, *) {
-            releaseDate = iso8601DateFormatter.date(from: dateString)
-        } else {
-            releaseDate = nil
-        }
+        releaseDate = iso8601DateFormatter.date(from: dateString)
         formattedPrice = try container.decodeIfPresent(String.self, forKey: .formattedPrice)
         genres = try container.decode([String].self, forKey: .genres)
         fileSizeBytes = try container.decodeIfPresent(Int.self, forKey: .fileSizeBytes)
