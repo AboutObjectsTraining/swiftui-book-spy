@@ -1,35 +1,30 @@
 // Copyright (C) 2022 About Objects, Inc. All Rights Reserved.
 // See LICENSE.txt for this project's licensing information.
 
-import XCTest
-@testable import BooksAPI
+import Foundation
+import BooksAPI
 
-let searchTerms1 = ["Xcode", "Swift"]
 
-class BooksQueryTests: XCTestCase {
+struct TestData {
     
-    func testEmptyQuery() {
-        let query = BooksQuery(searchTerms: [])
-        print(query)
-        XCTAssertThrowsError(try query.url)
+    static var book: Book {
+        books[0]
     }
     
-    func testQueryWithSearchTerms() async throws {
-        let query = BooksQuery(searchTerms: searchTerms1)
-        let books = try await APIClient.fetchBooks(query: query)
-        print(books)
-        XCTAssertFalse(books.isEmpty)
-    }
-    
-    func testDecodeJSONArray() throws {
+    static var books: [Book] {
         let data = booksJSON.data(using: .utf8)!
-        let books = try JSONDecoder().decode([Book].self, from: data)
-        print(books)
+        return try! JSONDecoder().decode([Book].self, from: data)
+    }
+    
+    static var searchViewVM: SearchView.ViewModel {
+        let vm = SearchView.ViewModel()
+        vm.books = TestData.books
+        return vm
     }
 }
 
 
-let booksJSON = """
+private let booksJSON = """
 [{
     "artworkUrl60": "https://is5-ssl.mzstatic.com/image/thumb/Publication4/v4/56/d9/c0/56d9c0b8-ed8f-6108-6c35-1bce66758812/cover.png/60x60bb.jpg",
     "artworkUrl100": "https://is5-ssl.mzstatic.com/image/thumb/Publication4/v4/56/d9/c0/56d9c0b8-ed8f-6108-6c35-1bce66758812/cover.png/100x100bb.jpg",

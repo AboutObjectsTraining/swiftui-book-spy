@@ -21,6 +21,8 @@
 		B46A55F427DC092F000C7F36 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46A55F127DC092F000C7F36 /* APIClient.swift */; };
 		B46A55F627DC0994000C7F36 /* BooksQueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46A55F527DC0994000C7F36 /* BooksQueryTests.swift */; };
 		B46A55F827DC0AFB000C7F36 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46A55F727DC0AFB000C7F36 /* SearchViewModel.swift */; };
+		B46A55FA27DFCC06000C7F36 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46A55F927DFCC06000C7F36 /* TestData.swift */; };
+		B46A55FC27DFEA6B000C7F36 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46A55FB27DFEA6B000C7F36 /* DetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +78,8 @@
 		B46A55F127DC092F000C7F36 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		B46A55F527DC0994000C7F36 /* BooksQueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooksQueryTests.swift; sourceTree = "<group>"; };
 		B46A55F727DC0AFB000C7F36 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		B46A55F927DFCC06000C7F36 /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
+		B46A55FB27DFEA6B000C7F36 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +135,8 @@
 				B46A55B027DC0774000C7F36 /* BookSpyApp.swift */,
 				B46A55B227DC0774000C7F36 /* SearchView.swift */,
 				B46A55F727DC0AFB000C7F36 /* SearchViewModel.swift */,
+				B46A55FB27DFEA6B000C7F36 /* DetailView.swift */,
+				B46A55F927DFCC06000C7F36 /* TestData.swift */,
 				B46A55B427DC0776000C7F36 /* Assets.xcassets */,
 				B46A55B627DC0776000C7F36 /* Preview Content */,
 			);
@@ -312,6 +318,8 @@
 				B46A55F827DC0AFB000C7F36 /* SearchViewModel.swift in Sources */,
 				B46A55B327DC0774000C7F36 /* SearchView.swift in Sources */,
 				B46A55B127DC0774000C7F36 /* BookSpyApp.swift in Sources */,
+				B46A55FC27DFEA6B000C7F36 /* DetailView.swift in Sources */,
+				B46A55FA27DFCC06000C7F36 /* TestData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
