@@ -18,15 +18,15 @@ struct SearchView: View {
     var listOfBooks: some View {
         List {
             ForEach(viewModel.books) { book in
-                BookListCell(book: book)
+                BookCell(viewModel: viewModel.cellViewModel(for: book))
             }
         }
         .navigationTitle("Books")
     }
 }
 
-struct BookListCell: View {
-    let book: Book
+struct BookCell: View {
+    let viewModel: ViewModel
     
     var body: some View {
         HStack {
@@ -34,20 +34,21 @@ struct BookListCell: View {
                 .imageScale(.large)
             summary
             NavigationLink("") {
-                DetailView(book: book)
+                DetailView(viewModel: viewModel.detailViewModel())
             }
         }
         .font(.subheadline)
         .padding(.vertical, 8)
+        .listRowBackground(Color.gray.opacity(0.1))
     }
     
     var summary: some View {
         VStack(alignment: .leading) {
-            Text(book.title)
+            Text(viewModel.book.title)
                 .font(.headline)
                 .lineLimit(2)
             Spacer()
-            Text(book.authorName)
+            Text(viewModel.book.authorName)
         }
         .layoutPriority(1)
     }
@@ -71,6 +72,7 @@ struct SearchView_Previews: PreviewProvider {
 //    }()
     static var previews: some View {
         SearchView(viewModel: TestData.searchViewVM)
+            
 //            .onAppear {
 //                TestData.searchViewVM.books = TestData.searchViewVM.books
 //            }
