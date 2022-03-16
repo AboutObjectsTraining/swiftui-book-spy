@@ -3,7 +3,7 @@
 
 import BooksAPI
 
-// MARK: - SearchView view model
+// MARK: - SearchView ViewModel
 extension SearchView {
 //    @MainActor
     final class ViewModel: ObservableObject {
@@ -26,8 +26,9 @@ extension SearchView.ViewModel {
     }
 }
 
-// MARK: - BookCell view model
+// MARK: - BookCell ViewModel
 extension BookCell {
+    
     final class ViewModel: ObservableObject {
         let book: Book
         
@@ -41,7 +42,7 @@ extension BookCell {
     }
 }
 
-// MARK: - Searching
+// MARK: - Effects
 extension SearchView.ViewModel {
     
     private var searchTerms: [String] {
@@ -57,6 +58,18 @@ extension SearchView.ViewModel {
         } catch {
             showError(error: error, query: query)
             books = []
+        }
+    }
+    
+    func addToLibrary(_ book: Book) {
+        Task {
+            await DataStore.shared.add(book: book)
+        }
+    }
+    
+    func saveLibrary() {
+        Task {
+            try await DataStore.shared.save()
         }
     }
 }

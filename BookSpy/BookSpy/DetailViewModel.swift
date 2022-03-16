@@ -5,8 +5,14 @@ import BooksAPI
 import UIKit
 
 extension DetailView {
-    struct ViewModel {
+    final class ViewModel: ObservableObject {
         let book: Book
+        @Published var isShowingAlert = false
         
+        var alertTitle: String {
+            "Added '\(book.title)' to Library"
+        }
+        
+        init(book: Book) { self.book = book }
     }
 }

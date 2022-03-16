@@ -5,26 +5,50 @@ import SwiftUI
 import BooksAPI
 
 struct DetailView: View {
-    let viewModel: ViewModel
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         VStack {
             Spacer()
             Text(viewModel.book.title)
                 .font(.title)
-                .padding()
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .padding(.top, 18)
+                .padding(.bottom, 2)
             Text(viewModel.book.authorName)
                 .font(.title3)
             ScrollView {
                 Text(viewModel.book.synopsis ?? "")
-                    .lineLimit(1000)
+                    .lineLimit(.max)
                     .lineSpacing(7)
                     .padding()
             }
             Spacer()
         }
+        .background(Color.gray.opacity(0.2))
+        .cornerRadius(20)
         .padding()
         .background(Color.gray.opacity(0.1))
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(viewModel.book.title)
+        .toolbar {
+            Button("Add to Library") {
+                viewModel.isShowingAlert = true
+            }
+            .alert(viewModel.alertTitle, isPresented: $viewModel.isShowingAlert) {
+                Button("Okay", role: .cancel) {
+                    addToLibrary()
+                }
+            }
+        }
+    }
+}
+
+extension DetailView {
+    
+    private func addToLibrary() {
+        // TODO: Implement me
     }
 }
 

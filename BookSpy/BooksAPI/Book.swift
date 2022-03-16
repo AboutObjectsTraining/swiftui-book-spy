@@ -63,6 +63,27 @@ public struct Book: Codable, Identifiable {
         artworkUrl = try container.decode(URL.self, forKey: .artworkUrl)
         detailsUrl = try container.decode(URL.self, forKey: .detailsUrl)
     }
+    
+    public func encode(to encoder: Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try values.encode(id, forKey: .id)
+        try values.encode(title, forKey: .title)
+        try values.encode(authorId, forKey: .authorId)
+        try values.encode(authorName, forKey: .authorName)
+        try values.encode(synopsis, forKey: .synopsis)
+        var dateString: String? = nil
+        if let releaseDate = releaseDate {
+            dateString = iso8601DateFormatter.string(from: releaseDate)
+        }
+        try values.encode(dateString, forKey: .releaseDate)
+        try values.encode(formattedPrice, forKey: .formattedPrice)
+        try values.encode(genres, forKey: .genres)
+        try values.encode(fileSizeBytes, forKey: .fileSizeBytes)
+        try values.encode(averageRating, forKey: .averageRating)
+        try values.encode(ratingCount, forKey: .ratingCount)
+        try values.encode(artworkUrl, forKey: .artworkUrl)
+        try values.encode(detailsUrl, forKey: .detailsUrl)
+    }
 }
 
 extension Book: Equatable {
