@@ -44,13 +44,25 @@ extension DataStore {
         get async { books.count }
     }
     
+    var isEmpty: Bool {
+        get async { return books.isEmpty }
+    }
+    
     func loadBooks() async {
         do {
+            try createStoreIfAbsent()
             let data = try Data(contentsOf: storeURL)
             books = try JSONDecoder().decode([Book].self, from: data)
         } catch {
             print("Unable to decode. Make sure values were encoded properly.", error.localizedDescription)
             abort()
+        }
+    }
+    
+    private func createStoreIfAbsent() throws {
+        if (!FileManager.default.fileExists(atPath: try storeURL.path)) {
+            let data = try JSONEncoder().encode(books)
+            try data.write(to: storeURL)
         }
     }
     

@@ -13,6 +13,8 @@ struct SearchView: View {
         }
         .searchable(text: $viewModel.queryText)
         .onSubmit(of: .search) { search() }
+        // Note: avoids a potential freeze when user taps Cancel button
+        .navigationViewStyle(.automatic)
     }
     
     var listOfBooks: some View {
@@ -21,7 +23,7 @@ struct SearchView: View {
                 BookCell(viewModel: viewModel.cellViewModel(for: book))
             }
         }
-        .navigationTitle("Books")
+        .navigationTitle("Book Search")
     }
 }
 
@@ -65,17 +67,8 @@ extension SearchView {
 }
 
 struct SearchView_Previews: PreviewProvider {
-//    static let viewModel: SearchView.ViewModel = {
-//        let vm = SearchView.ViewModel()
-//        vm.books = TestData.books
-//        return vm
-//    }()
     static var previews: some View {
         SearchView(viewModel: TestData.searchViewVM)
-            
-//            .onAppear {
-//                TestData.searchViewVM.books = TestData.searchViewVM.books
-//            }
     }
 }
 

@@ -11,6 +11,15 @@ extension SearchView {
         @Published var queryText: String = ""
         
         var cellViewModels: [BookCell.ViewModel] = []
+        
+        /// Ensure the store is loaded in case the user wants to add or remove a book later.
+        init() {
+            Task {
+                if await DataStore.shared.isEmpty {
+                    await DataStore.shared.loadBooks()
+                }
+            }
+        }
     }
 }
 
@@ -61,8 +70,13 @@ extension SearchView.ViewModel {
         }
     }
     
+    func isInLibrary(_ book: Book) async -> Bool {
+        return await DataStore.shared.contains(book: book)
+    }
+    
     func addToLibrary(_ book: Book) {
         Task {
+            if await isInLibrary(book) { return }
             await DataStore.shared.add(book: book)
         }
     }
