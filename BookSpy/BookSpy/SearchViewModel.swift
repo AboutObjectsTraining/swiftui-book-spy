@@ -12,42 +12,47 @@ extension SearchView {
         @Published var inputText = ""
         @Published var queryText = ""
         
-        private var subscriptions: Set<AnyCancellable> = []
-        
         var cellViewModels: [BookCell.ViewModel] = []
+        
+        private var subscriptions: Set<AnyCancellable> = []
         
         init() {
             loadBooks()
             configurePublishers()
         }
-        
-        private func configurePublishers() {
-            $inputText
-                .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
-                .assign(to: &$queryText)
+    }
+}
 
-            $queryText
-                .sink { text in
-                    Task {
-                        if !self.queryText.isEmpty {
-                            await self.performSearch()
-                        }
+// MARK: - Initialization
+extension SearchView.ViewModel {
+    
+    private func configurePublishers() {
+        $inputText
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .assign(to: &$queryText)
+        
+        $queryText
+            .sink { _ in
+                Task {
+                    if !self.queryText.isEmpty {
+                        await self.performSearch()
                     }
                 }
-                .store(in: &subscriptions)
-        }
-        
-        /// Ensure the store is loaded in case the user wants to add or remove a book later.
-        private func loadBooks() {
-            Task {
-                if await DataStore.shared.isEmpty {
-                    await DataStore.shared.loadBooks()
-                }
+            }
+            .store(in: &subscriptions)
+    }
+    
+    /// Ensure the store is loaded in case the user wants to add or remove a book later.
+    private func loadBooks() {
+        Task {
+            if await DataStore.shared.isEmpty {
+                await DataStore.shared.loadBooks()
             }
         }
     }
 }
 
+// MARK: - Nested ViewModels
 extension SearchView.ViewModel {
     func cellViewModel(for book: Book) -> BookCell.ViewModel {
         if let viewModel = cellViewModels.first(where: { $0.book == book }) {
@@ -57,22 +62,6 @@ extension SearchView.ViewModel {
         let viewModel = BookCell.ViewModel(book: book)
         cellViewModels.append(viewModel)
         return viewModel
-    }
-}
-
-// MARK: - BookCell ViewModel
-extension BookCell {
-    
-    final class ViewModel: ObservableObject {
-        let book: Book
-        
-        init(book: Book) {
-            self.book = book
-        }
-        
-        func detailViewModel() -> DetailView.ViewModel {
-            return DetailView.ViewModel(book: book)
-        }
     }
 }
 
