@@ -7,23 +7,47 @@ import BooksAPI
 struct DetailView: View {
     @ObservedObject var viewModel: ViewModel
     
+    var heading: some View {
+        VStack {
+            LibraryIcon(isInLibrary: viewModel.isInLibrary)
+            title
+            HStack(alignment: .top) {
+                image
+                VStack(alignment: .leading) {
+                    Text(viewModel.book.authorName)
+                        .font(.title3)
+                    Text("Price: \(viewModel.book.formattedPrice ?? "--")")
+                        .padding(.top, -10)
+                        .font(.subheadline)
+                    RatingView(viewModel: viewModel)
+                }
+                .padding(.leading, 12)
+            }
+            .padding(.vertical, 5)
+        }
+    }
+    
     var title: some View {
         Text(viewModel.book.title)
             .font(.title)
             .multilineTextAlignment(.center)
-            .padding(.horizontal)
-            .padding(.top, 40)
-            .padding(.bottom, 2)
-            .overlay(alignment: .top) {
-                LibraryIcon(isInLibrary: viewModel.isInLibrary)
-            }
+            .lineSpacing(-1)
+            .padding(.vertical, 1)
     }
     
-    var author: some View {
-        Text(viewModel.book.authorName)
-            .font(.title3)
+    var image: some View {
+        AsyncImage(url: viewModel.book.artworkUrl) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 90)
+        } placeholder: {
+            ProgressView()
+        }
+        .border(.green)
+
     }
-    
+        
     var synopsis: some View {
         ScrollView {
             Text(viewModel.book.synopsis ?? "")
@@ -37,19 +61,19 @@ struct DetailView: View {
         Button(
             action: { addToLibrary() },
             label: {
-                Image(systemName: "plus.circle")
+                Image(systemName: "plus.circle.fill")
                     .symbolRenderingMode(.multicolor)
                     .font(.system(size: 24))
             })
         .disabled(viewModel.isInLibrary)
-        .opacity(viewModel.isInLibrary ? 0.5 : 1.0)
+        .opacity(viewModel.isInLibrary ? 0.4 : 1.0)
     }
     
     var removeButton: some View {
         Button(
             action: { removeFromLibrary() },
             label: {
-                Image(systemName: "minus.circle")
+                Image(systemName: "minus.circle.fill")
                     .symbolRenderingMode(.multicolor)
                     .font(.system(size: 24))
             })
@@ -60,8 +84,7 @@ struct DetailView: View {
     var body: some View {
         VStack {
             Spacer()
-            title
-            author
+            heading
             synopsis
             Spacer()
         }
@@ -84,18 +107,6 @@ struct DetailView: View {
     }
 }
 
-struct LibraryIcon: View {
-    let isInLibrary: Bool
-    
-    var body: some View {
-        Image(systemName: "building.columns" + (isInLibrary ? ".fill" : ""))
-            .imageScale(.large)
-            .font(.system(size: 20))
-            .opacity(isInLibrary ? 1.0 : 0.3)
-            .padding(.top, 3)
-    }
-}
-
 extension DetailView {
     
     private func addToLibrary() {
@@ -111,6 +122,40 @@ extension DetailView {
     }
 }
 
+struct RatingView: View {
+    @ObservedObject var viewModel: DetailView.ViewModel
+    let maxRating = 5
+    var rating: CGFloat { CGFloat(viewModel.rating) }
+    
+    var body: some View {
+        HStack {
+            HStack(spacing: 0) {
+                ForEach(0..<5) { count in
+                    Image(systemName: Int(rating + 0.1) <= count ? "star" : "star.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.primary)
+                }
+            }
+            .frame(height: 12)
+        }
+        
+        Text("\(viewModel.ratingText)")
+            .font(.caption)
+    }
+}
+
+struct LibraryIcon: View {
+    let isInLibrary: Bool
+    
+    var body: some View {
+        Image(systemName: "building.columns" + (isInLibrary ? ".fill" : ""))
+            .imageScale(.large)
+            .font(.system(size: 18))
+            .opacity(isInLibrary ? 1.0 : 0.3)
+            .padding(.top, 3)
+    }
+}
 struct DetailView_Previews: PreviewProvider {
     static let viewModel = DetailView.ViewModel(book: TestData.book)
     
@@ -118,5 +163,9 @@ struct DetailView_Previews: PreviewProvider {
         NavigationView {
             DetailView(viewModel: viewModel)
         }
+        NavigationView {
+            DetailView(viewModel: viewModel)
+        }
+        .preferredColorScheme(.dark)
     }
 }

@@ -8,7 +8,6 @@ extension DetailView {
     
     final class ViewModel: ObservableObject {
         let book: Book
-//        @Published var isShowingAlert = false
         @Published var isInLibrary: Bool = false
 
         var alertTitle: String {
@@ -36,4 +35,23 @@ extension DetailView.ViewModel {
         try await DataStore.shared.save()
         isInLibrary = false
     }
+}
+
+extension DetailView.ViewModel {
+    private static let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 1
+        formatter.minimumFractionDigits = 1
+        return formatter
+    }()
+    
+    public var rating: Double {
+        book.averageRating ?? 0
+    }
+    
+    public var ratingText: String {
+        let ratingText = Self.numberFormatter.string(from: NSNumber(value: rating)) ?? "-.-"
+        return "\(ratingText)  \(book.ratingCount ?? 0) Reviews"
+    }
+
 }
