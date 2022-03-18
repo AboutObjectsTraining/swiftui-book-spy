@@ -11,8 +11,7 @@ struct SearchView: View {
         NavigationView {
             listOfBooks
         }
-        .searchable(text: $viewModel.queryText)
-        .onSubmit(of: .search) { search() }
+        .searchable(text: $viewModel.inputText)
         // Note: avoids a potential freeze when user taps Cancel button
         .navigationViewStyle(.automatic)
     }
@@ -59,11 +58,6 @@ struct BookCell: View {
 // MARK: - Actions
 extension SearchView {
     
-    private func search() {
-        Task {
-            await viewModel.performSearch()
-        }
-    }
 }
 
 struct SearchView_Previews: PreviewProvider {

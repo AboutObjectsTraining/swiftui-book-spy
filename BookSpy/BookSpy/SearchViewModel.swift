@@ -2,18 +2,43 @@
 // See LICENSE.txt for this project's licensing information.
 
 import BooksAPI
+import Combine
 
-// MARK: - SearchView ViewModel
+// MARK: - ViewModel
 extension SearchView {
-//    @MainActor
+    
     final class ViewModel: ObservableObject {
         @Published var books: [Book] = []
-        @Published var queryText: String = ""
+        @Published var inputText = ""
+        @Published var queryText = ""
+        
+        private var subscriptions: Set<AnyCancellable> = []
         
         var cellViewModels: [BookCell.ViewModel] = []
         
-        /// Ensure the store is loaded in case the user wants to add or remove a book later.
         init() {
+            loadBooks()
+            configurePublishers()
+        }
+        
+        private func configurePublishers() {
+            $inputText
+                .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+                .assign(to: &$queryText)
+
+            $queryText
+                .sink { text in
+                    Task {
+                        if !self.queryText.isEmpty {
+                            await self.performSearch()
+                        }
+                    }
+                }
+                .store(in: &subscriptions)
+        }
+        
+        /// Ensure the store is loaded in case the user wants to add or remove a book later.
+        private func loadBooks() {
             Task {
                 if await DataStore.shared.isEmpty {
                     await DataStore.shared.loadBooks()
