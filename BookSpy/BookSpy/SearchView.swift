@@ -9,10 +9,12 @@ struct SearchView: View {
     
     var body: some View {
         NavigationView {
-            listOfBooks
+            VStack {
+                listOfBooks
+            }
         }
         .searchable(text: $viewModel.inputText)
-        // Note: avoids a potential freeze when user taps Cancel button
+        // Note: may avoid potential freeze when user taps Cancel.
         .navigationViewStyle(.automatic)
     }
     

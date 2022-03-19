@@ -10,12 +10,45 @@ actor DataStore {
     // TODO: Making books a Set would ensure uniqueness, but
     // making it an array simplifies testing, at least for now.
     private(set) var books: [Book] = []
+    private var _authors: [Author] = []
     private(set) var storeName: String
-
+    
     init(storeName: String = "Books") {
         self.storeName = storeName
     }
 }
+
+// MARK: - Authors
+extension DataStore {
+    
+    public var authors: [Author] {
+        books.forEach { book in
+            let author = author(for: book)
+            if !author.books.contains(book) {
+                author.add(book: book)
+            }
+        }
+        return _authors
+    }
+    
+    public func author(for book: Book) -> Author {
+        if let author = (_authors
+            .filter { author in author.id == book.authorId }
+            .first) {
+            return author
+        }
+        
+        let author = Author(id: book.authorId, name: book.authorName)
+        _authors.append(author)
+        
+        return author
+    }
+    
+    public func add(author: Author) {
+        _authors.append(author)
+    }
+}
+
 
 // MARK: - File URLs
 extension DataStore {

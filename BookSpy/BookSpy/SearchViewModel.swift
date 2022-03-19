@@ -9,6 +9,7 @@ extension SearchView {
     
     final class ViewModel: ObservableObject {
         @Published var books: [Book] = []
+        @Published var authors: [Author] = []
         @Published var inputText = ""
         @Published var queryText = ""
         
@@ -40,6 +41,16 @@ extension SearchView.ViewModel {
                 }
             }
             .store(in: &subscriptions)
+        
+        $books
+            .sink { _ in
+                Task { await self.updateAuthors() }
+            }
+            .store(in: &subscriptions)
+    }
+    
+    @MainActor func updateAuthors() async {
+        self.authors = await DataStore.shared.authors
     }
     
     /// Ensure the store is loaded in case the user wants to add or remove a book later.

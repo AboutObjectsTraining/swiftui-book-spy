@@ -23,6 +23,7 @@ extension DetailView {
     }
 }
 
+// MARK: - Actions
 extension DetailView.ViewModel {
     @MainActor func addBookToLibrary() async throws {
         await DataStore.shared.add(book: book)
@@ -37,6 +38,7 @@ extension DetailView.ViewModel {
     }
 }
 
+// MARK: Ratings
 extension DetailView.ViewModel {
     private static let numberFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -45,13 +47,20 @@ extension DetailView.ViewModel {
         return formatter
     }()
     
-    public var rating: Double {
+    var rating: Double {
         book.averageRating ?? 0
     }
     
-    public var ratingText: String {
+    var ratingText: String {
         let ratingText = Self.numberFormatter.string(from: NSNumber(value: rating)) ?? "-.-"
         return "\(ratingText)  \(book.ratingCount ?? 0) Reviews"
     }
-
+    
+    func imageName(for index: Int) -> String {
+        let intRating = Int(rating + 0.1)
+        let remainder = rating - Double(intRating)
+        
+        return index < intRating ? "star.fill" :
+        index == intRating && remainder > 0.4 ? "star.leadinghalf.filled" : "star"
+    }
 }

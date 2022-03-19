@@ -21,6 +21,22 @@ struct TestData {
         vm.books = TestData.books
         return vm
     }
+    
+    static var libraryViewVM: LibraryViewModel {
+        let vm = LibraryViewModel()
+        vm.books = TestData.books
+        return vm
+    }
+    
+    static var searchViewVMDynamic: SearchView.ViewModel {
+        let vm = SearchView.ViewModel()
+        vm.queryText = "Xcode"
+        return vm
+    }
+    
+    static var bookCellVM: BookCell.ViewModel {
+        return BookCell.ViewModel(book: books[0])
+    }
 }
 
 

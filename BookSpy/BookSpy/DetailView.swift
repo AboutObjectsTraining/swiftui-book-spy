@@ -130,8 +130,8 @@ struct RatingView: View {
     var body: some View {
         HStack {
             HStack(spacing: 0) {
-                ForEach(0..<5) { count in
-                    Image(systemName: Int(rating + 0.1) <= count ? "star" : "star.fill")
+                ForEach(0..<5) { index in
+                    Image(systemName: viewModel.imageName(for: index))
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .foregroundColor(.primary)
